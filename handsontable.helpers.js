@@ -87,7 +87,7 @@
 
     for (var prop in props) {
       var col = HH.setColType(prop, props[prop]);
-      o.columns.push(col);
+      columns.push(col);
     }
 
     return columns;
