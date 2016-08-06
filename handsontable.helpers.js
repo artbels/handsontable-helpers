@@ -25,6 +25,21 @@
   };
 
 
+  HH.draw = function(objArr) {
+
+    var parent = document.querySelector("#hot") || document.body;
+
+    hot = new Handsontable(parent, {
+    columns: HH.getColumns(objArr),
+    data: HH.stringifyArrObj(objArr),
+    colHeaders: true,
+    manualColumnResize: true,
+    columnSorting: true,
+    contextMenu: true
+    });
+  }
+
+
   HH.updateIdArr = function(data, colHeaders) {
     var idArr = [];
     for (var i = 0; i < data.length; i++) {
@@ -51,6 +66,31 @@
     if (prop == "_id") col.readOnly = true;
     if (col.jsType == "date") col.dateFormat = 'DD-MMM-YYYY';
     return col;
+  };
+
+
+  HH.getColumns = function(objArr) {
+    var props = {};
+    var columns = [];
+
+    for (var i = 0; i < arr.length; i++) {
+      var row = arr[i];
+      for (var key in row) {
+        var val = row[key];
+        var jsType = typeof val;
+        if(jsType == "string") {
+          if(HH.reJsStrData.test(val)) jsType = "date";
+        }
+        if (!props[key]) props[key] = jsType;
+      }
+    }
+
+    for (var prop in props) {
+      var col = HH.setColType(prop, props[prop]);
+      o.columns.push(col);
+    }
+
+    return columns;
   };
 
 
