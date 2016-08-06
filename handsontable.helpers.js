@@ -1,10 +1,6 @@
 /**
- * TODO
- *
- * work changes simple, return changes obj
- * do not work with number as integer, work as text
- * collect columns for objArr
- * 
+ * Handsontable helper functions
+ * artbels @ 2016 
  * 
  */
 
@@ -18,40 +14,43 @@
 
   HH.typesMap = {
     "string": "text",
-    "number": "numeric",
+    "number": "text", //handsontable numeric is only integers
     "boolean": "checkbox",
     "object": "text",
     "date": "date"
   };
 
 
-  HH.draw = function(objArr, parent) {
+  HH.draw = function(objArr, params) {
 
-    parent = parent || document.querySelector("#hot") || document.body;
+    if(typeof params == "string") params = {
+      parent: document.querySelector(params)
+    };
 
-    hot = new Handsontable(parent, {
-    columns: HH.getColumns(objArr),
+    if(typeof hot != "undefined") hot.destroy();
+
+    params = params || {};
+
+    params.parent = params.parent || document.querySelector("#ht") || document.body;
+    params.contextMenu = (typeof params.contextMenu == "boolean") ? params.contextMenu : true;
+
+    var columns = HH.getColumns(objArr, params.cols);
+
+    if(params.readOnly) columns = columns.map(function (a) {
+      a.readOnly = true;
+      return a;
+    });
+
+    hot = new Handsontable(params.parent, {
     data: HH.stringifyArrObj(objArr),
-    colHeaders: true,
+    columns: columns,
+    colHeaders: columns.map(function (a) {
+      return a.data;
+    }),
     manualColumnResize: true,
     columnSorting: true,
-    contextMenu: true
+    contextMenu: params.contextMenu
     });
-  };
-
-
-  HH.updateIdArr = function(data, colHeaders) {
-    var idArr = [];
-    for (var i = 0; i < data.length; i++) {
-      var item = data[i];
-      for (var j = 0; j < colHeaders.length; j++) {
-        var col = colHeaders[j];
-        if (col == "_id") {
-          idArr.push(item[j]);
-        }
-      }
-    }
-    return idArr;
   };
 
 
@@ -69,9 +68,10 @@
   };
 
 
-  HH.getColumns = function(objArr) {
+  HH.getColumns = function(objArr, cols) {
     var props = {};
     var columns = [];
+    var col;
 
     for (var i = 0; i < objArr.length; i++) {
       var row = objArr[i];
@@ -85,44 +85,38 @@
       }
     }
 
-    for (var prop in props) {
-      var col = HH.setColType(prop, props[prop]);
-      columns.push(col);
+    if(cols)  {
+      for (var j = 0; j < cols.length; j++) {
+        var colName = cols[j];
+        if(props[colName]) {          
+          col = HH.setColType(colName, props[colName]);
+          columns.push(col);
+        }
+      }
+    } else {
+      for (var prop in props) {
+        col = HH.setColType(prop, props[prop]);
+        columns.push(col);
+      }
     }
 
     return columns;
   };
 
 
-  HH.buildSchema = function(arr) {
-
-    var props = {};
-
-    var o = {
-      columns: [],
-      colHeaders: [],
-      idArr: []
-    };
-
-    for (var i = 0; i < arr.length; i++) {
-      var row = arr[i];
-      o.idArr.push(row._id);
-      for (var key in row) {
-        var val = row[key];
-        var jsType = typeof val;
-        if(jsType == "string") {
-          if(HH.reJsStrData.test(val)) jsType = "date";
+  HH.updateIdArr = function(data, colHeaders) {
+    var idArr = [];
+    for (var i = 0; i < data.length; i++) {
+      var item = data[i];
+      for (var j = 0; j < colHeaders.length; j++) {
+        var col = colHeaders[j];
+        if (col == "_id") {
+          idArr.push(item[j]);
+          break;
         }
-        if (!props[key]) props[key] = jsType;
       }
     }
-
-    for (var prop in props) {
-      var col = HH.setColType(prop, props[prop]);
-      o.columns.push(col);
-      o.colHeaders.push(prop);
-    }
-    return o;
+    return idArr;
   };
 
 
@@ -172,45 +166,25 @@
   HH.workChanges = function(changes, arr, columns) {
     if (!changes) return;
 
-    var o = {
-      new: {},
-      upd: {}
-    };
+    var changesArr = [];
 
     for (var i = 0; i < changes.length; i++) {
       var change = changes[i];
 
-      var oldValue = change[2];
-      var newValue = change[3];
-      var changed = (oldValue != newValue);
+      var o = {
+        oldValue: change[2],
+        newValue: change[3]
+      };
+      var changed = (o.oldValue != o.newValue);
 
       if (!changed) continue;
 
-      var rowNum = Number(change[0]);
-      var field = change[1];
-      var fieldType;
-      for (var t = 0; t < columns.length; t++) {
-        var col = columns[t];
-        if (col.data == field) fieldType = col.jsType;
-      }
-      var setId = (field === "_id");
-      if (setId) continue;
-
-      var docId = arr[rowNum]._id;
-
-      if (docId) {
-        o.upd[rowNum] = o.upd[rowNum] || {};
-        o.upd[rowNum][field] = HH.setDataType(newValue, fieldType);
-      } else {
-        o.new[rowNum] = o.new[rowNum] || {};
-        o.new[rowNum][field] = HH.setDataType(newValue, fieldType);
-      }
+      o.rowNum = Number(change[0]);
+      o.field = change[1];
+      changesArr.push(o);
     }
 
-    o.newArr = Object.keys(o.new);
-    o.updArr = Object.keys(o.upd);
-
-    return o;
+    return changesArr;
   };
 
 
@@ -275,19 +249,6 @@
   };
 
 
-  HH.buildParseSchema = function(columns, colHeaders) {
-    var schemeObj = {};
-
-    for (var i = 0; i < columns.length; i++) {
-      var item = columns[i];
-      schemeObj[colHeaders[i]] = {
-        type: item.jsType
-      };
-    }
-    return schemeObj;
-  };
-
-
   HH.stringifyArrObj = function(arr) {
 
     if ((!arr) && (typeof(arr[0]) != "object")) return;
@@ -304,6 +265,19 @@
       }
     }
     return arr;
+  };
+
+
+  HH.buildParseSchema = function(columns, colHeaders) {
+    var schemeObj = {};
+
+    for (var i = 0; i < columns.length; i++) {
+      var item = columns[i];
+      schemeObj[colHeaders[i]] = {
+        type: item.jsType
+      };
+    }
+    return schemeObj;
   };
 
 })();
