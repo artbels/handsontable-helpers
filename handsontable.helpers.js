@@ -1,5 +1,15 @@
-(function() {
+/**
+ * TODO
+ *
+ * work changes simple, return changes obj
+ * do not work with number as integer, work as text
+ * collect columns for objArr
+ * 
+ * 
+ */
 
+
+(function() {
 
   var HH = this.HH = {};
 
@@ -13,9 +23,6 @@
     "object": "text",
     "date": "date"
   };
-
-
-  HH.servProps = ["_id", "updatedAt", "_updated_at", "createdAt", "_created_at"];
 
 
   HH.updateIdArr = function(data, colHeaders) {
@@ -243,9 +250,7 @@
 
   HH.stringifyArrObj = function(arr) {
 
-    if ((!arr) && (typeof(arr[0]) != "object")) {
-      return;
-    }
+    if ((!arr) && (typeof(arr[0]) != "object")) return;
 
     for (var i = 0; i < arr.length; i++) {
       var row = arr[i];
@@ -256,7 +261,6 @@
         
         if (type == "object") arr[i][key] = JSON.stringify(cell);
         else if(isDate) arr[i][key] = moment(new Date(cell)).format('DD-MMM-YYYY');
-
       }
     }
     return arr;
