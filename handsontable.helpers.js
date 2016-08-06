@@ -25,9 +25,9 @@
   };
 
 
-  HH.draw = function(objArr) {
+  HH.draw = function(objArr, parent) {
 
-    var parent = document.querySelector("#hot") || document.body;
+    parent = parent || document.querySelector("#hot") || document.body;
 
     hot = new Handsontable(parent, {
     columns: HH.getColumns(objArr),
@@ -37,7 +37,7 @@
     columnSorting: true,
     contextMenu: true
     });
-  }
+  };
 
 
   HH.updateIdArr = function(data, colHeaders) {
@@ -73,8 +73,8 @@
     var props = {};
     var columns = [];
 
-    for (var i = 0; i < arr.length; i++) {
-      var row = arr[i];
+    for (var i = 0; i < objArr.length; i++) {
+      var row = objArr[i];
       for (var key in row) {
         var val = row[key];
         var jsType = typeof val;
