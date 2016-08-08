@@ -32,7 +32,11 @@
     params = params || {};
 
     params.parent = params.parent || document.querySelector("#ht") || document.body;
-    params.contextMenu = (typeof params.contextMenu == "boolean") ? params.contextMenu : true;
+    if(typeof params.contextMenu != "undefined") params.contextMenu = true;
+    else params.contextMenu = params.contextMenu;
+    
+    params.afterChange = params.afterChange || console.log;
+    params.afterRemoveRow = params.afterRemoveRow || console.log;
 
     var columns = HH.getColumns(objArr, params.cols);
 
@@ -49,7 +53,9 @@
     }),
     manualColumnResize: true,
     columnSorting: true,
-    contextMenu: params.contextMenu
+    contextMenu: params.contextMenu,
+    afterChange: params.afterChange,
+    afterRemoveRow: params.afterRemoveRow
     });
   };
 
