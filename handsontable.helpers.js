@@ -66,7 +66,7 @@
     };
 
     col.type = HH.typesMap[col.jsType];
-    if (prop == "_id") col.readOnly = true;
+    if (["id", "_id", "objectId"].indexOf(prop) != -1) col.readOnly = true;
     if (col.jsType == "date") col.dateFormat = 'DD-MMM-YYYY';
     return col;
   };
@@ -189,6 +189,22 @@
     }
 
     return changesArr;
+  };
+
+
+  HH.afterRemoveRow = function(rowNum, numRows, idArr, func) {
+    return new Promise(function(res, err) {
+
+      (function next() {
+        func(rowNum, function() {
+          rowNum++;
+          numRows--;
+
+          if (numRows > 0) next();
+          else res();
+        });
+      })();
+    });
   };
 
 
