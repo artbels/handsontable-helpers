@@ -32,7 +32,7 @@
     params = params || {};
 
     params.parent = params.parent || document.querySelector("#ht") || document.body;
-    if(typeof params.contextMenu != "undefined") params.contextMenu = true;
+    if(typeof params.contextMenu === "undefined") params.contextMenu = true;
     else params.contextMenu = params.contextMenu;
     
     params.afterChange = params.afterChange || console.log;
