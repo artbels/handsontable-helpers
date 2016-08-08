@@ -52,7 +52,8 @@
     columnSorting: true,
     contextMenu: params.contextMenu,
     afterChange: params.afterChange,
-    afterRemoveRow: params.afterRemoveRow
+    afterRemoveRow: params.afterRemoveRow,
+    colWidths: params.colWidths
     });
   };
 
