@@ -31,11 +31,13 @@
 
     params = params || {};
 
+    objArr = objArr || [];
+
     params.parent = params.parent || document.querySelector("#ht") || document.body;
     if (typeof params.contextMenu === "undefined") params.contextMenu = true;
     else params.contextMenu = params.contextMenu;
 
-    var columns = HH.getColumns(objArr, params.cols);
+    params.columns = params.columns || HH.getColumns(objArr, params.cols);
 
     if (params.readOnly) columns = columns.map(function(a) {
       a.readOnly = true;
@@ -43,9 +45,9 @@
     });
 
     hot = new Handsontable(params.parent, {
-      data: HH.stringifyArrObj(objArr),
-      columns: columns,
-      colHeaders: columns.map(function(a) {
+      data: objArr,
+      columns: params.columns,
+      colHeaders: params.columns.map(function(a) {
         return a.data;
       }),
       manualColumnResize: true,
