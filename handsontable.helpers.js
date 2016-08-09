@@ -23,37 +23,37 @@
 
   HH.draw = function(objArr, params) {
 
-    if(typeof params == "string") params = {
+    if (typeof params == "string") params = {
       parent: document.querySelector(params)
     };
 
-    if(typeof hot != "undefined") hot.destroy();
+    if (typeof hot != "undefined") hot.destroy();
 
     params = params || {};
 
     params.parent = params.parent || document.querySelector("#ht") || document.body;
-    if(typeof params.contextMenu === "undefined") params.contextMenu = true;
+    if (typeof params.contextMenu === "undefined") params.contextMenu = true;
     else params.contextMenu = params.contextMenu;
-    
+
     var columns = HH.getColumns(objArr, params.cols);
 
-    if(params.readOnly) columns = columns.map(function (a) {
+    if (params.readOnly) columns = columns.map(function(a) {
       a.readOnly = true;
       return a;
     });
 
     hot = new Handsontable(params.parent, {
-    data: HH.stringifyArrObj(objArr),
-    columns: columns,
-    colHeaders: columns.map(function (a) {
-      return a.data;
-    }),
-    manualColumnResize: true,
-    columnSorting: true,
-    contextMenu: params.contextMenu,
-    afterChange: params.afterChange,
-    afterRemoveRow: params.afterRemoveRow,
-    colWidths: params.colWidths
+      data: HH.stringifyArrObj(objArr),
+      columns: columns,
+      colHeaders: columns.map(function(a) {
+        return a.data;
+      }),
+      manualColumnResize: true,
+      columnSorting: true,
+      contextMenu: params.contextMenu,
+      afterChange: params.afterChange,
+      afterRemoveRow: params.afterRemoveRow,
+      colWidths: params.colWidths
     });
   };
 
@@ -82,17 +82,17 @@
       for (var key in row) {
         var val = row[key];
         var jsType = typeof val;
-        if(jsType == "string") {
-          if(HH.reJsStrData.test(val)) jsType = "date";
+        if (jsType == "string") {
+          if (HH.reJsStrData.test(val)) jsType = "date";
         }
         if (!props[key]) props[key] = jsType;
       }
     }
 
-    if(cols)  {
+    if (cols) {
       for (var j = 0; j < cols.length; j++) {
         var colName = cols[j];
-        if(props[colName]) {          
+        if (props[colName]) {
           col = HH.setColType(colName, props[colName]);
           columns.push(col);
         }
@@ -167,8 +167,10 @@
   };
 
 
-  HH.workChanges = function(changes, arr, columns) {
-    if (!changes) return;
+  HH.afterChange = function(changes, src) {
+
+    if (src == "loadData") return;
+    if (!changes || !changes.length) return;
 
     var changesArr = [];
 
@@ -279,9 +281,9 @@
         var cell = row[key];
         var type = typeof cell;
         var isDate = HH.reJsStrData.test(cell);
-        
+
         if (type == "object") arr[i][key] = JSON.stringify(cell);
-        else if(isDate) arr[i][key] = moment(new Date(cell)).format('DD-MMM-YYYY');
+        else if (isDate) arr[i][key] = moment(new Date(cell)).format('DD-MMM-YYYY');
       }
     }
     return arr;
