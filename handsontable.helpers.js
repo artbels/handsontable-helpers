@@ -14,10 +14,25 @@
 
   HH.typesMap = {
     "string": "text",
-    "number": "text", //handsontable numeric is only integers
+    "number": "numeric",
     "boolean": "checkbox",
     "object": "text",
     "date": "date"
+  };
+
+
+  HH.add = function(obj, objArr, params) {
+
+    if (obj.constructor != Object) throw Error("obj.constructor != Object");
+    if (objArr.constructor != Array) throw Error("objArr.constructor != Array");
+    if(typeof params == 'undefined') throw Error("params are required");
+
+    objArr.push(obj);
+
+    if (typeof params.instance == "undefined") {
+      HH.draw(objArr, params);
+
+    } else params.instance.render();    
   };
 
 
@@ -27,7 +42,7 @@
       parent: document.querySelector(params)
     };
 
-    if (typeof hot != "undefined") hot.destroy();
+    if (typeof params.instance != "undefined") params.instance.destroy();
 
     params = params || {};
 
@@ -44,7 +59,7 @@
       return a;
     });
 
-    hot = new Handsontable(params.parent, {
+    params.instance = new Handsontable(params.parent, {
       data: objArr,
       columns: params.columns,
       colHeaders: params.columns.map(function(a) {
@@ -60,6 +75,9 @@
       afterRemoveRow: params.afterRemoveRow,
       colWidths: params.colWidths
     });
+
+    console.log(params.instance);
+
   };
 
 
@@ -73,6 +91,7 @@
     col.type = HH.typesMap[col.jsType];
     if (["id", "_id", "objectId"].indexOf(prop) != -1) col.readOnly = true;
     if (col.jsType == "date") col.dateFormat = 'DD-MMM-YYYY';
+    else if (col.jsType == "number") col.format = '0.[0000000000]';
     return col;
   };
 
@@ -133,9 +152,8 @@
 
     switch (type) {
       case "number":
-        var parseIntRes = parseInt(data, 10);
-        if (isNaN(parseIntRes)) data = undefined;
-        else data = parseIntRes;
+        if (isNaN(cell)) cell = undefined;
+        else cell = Number(cell);
         break;
 
       case "boolean":
@@ -232,9 +250,8 @@
 
         switch (type) {
           case "Number":
-            var parseIntRes = parseInt(cell, 10);
-            if (isNaN(parseIntRes)) cell = undefined;
-            else cell = parseIntRes;
+            if (isNaN(cell)) cell = undefined;
+            else cell = Number(cell);
             break;
 
           case "Boolean":
