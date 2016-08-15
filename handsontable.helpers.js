@@ -83,8 +83,6 @@
       colWidths: params.colWidths
     });
 
-    console.log(params.instance);
-
   };
 
 
@@ -240,8 +238,12 @@
   };
 
 
-  HH.convArrArrToArrObj = function(hotData, minSpareRows, colHeaders) {
+  HH.convArrArrToArrObj = function(hotData, minSpareRows, columns) {
     var arr = [];
+
+    var colHeaders = columns.map(function(a) {
+      return a.data;
+    });
 
     for (var i = 0; i < hotData.length - minSpareRows; i++) {
       var row = hotData[i];
