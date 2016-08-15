@@ -25,14 +25,14 @@
 
     if (obj.constructor != Object) throw Error("obj.constructor != Object");
     if (objArr.constructor != Array) throw Error("objArr.constructor != Array");
-    if(typeof params == 'undefined') throw Error("params are required");
+    if (typeof params == 'undefined') throw Error("params are required");
 
     objArr.push(obj);
 
     if (typeof params.instance == "undefined") {
       HH.draw(objArr, params);
 
-    } else params.instance.render();    
+    } else params.instance.render();
   };
 
 
@@ -42,17 +42,26 @@
       parent: document.querySelector(params)
     };
 
+    if ((typeof params == "undefined") && (objArr.constructor == Object)) {
+      params = objArr;
+      objArr = undefined;
+    }
+
     if (typeof params.instance != "undefined") params.instance.destroy();
 
     params = params || {};
-
-    objArr = objArr || [];
 
     params.parent = params.parent || document.querySelector("#ht") || document.body;
     if (typeof params.contextMenu === "undefined") params.contextMenu = false;
     else params.contextMenu = params.contextMenu;
 
-    params.columns = params.columns || HH.getColumns(objArr, params.cols);
+    params.columns = params.columns ||
+      (objArr && HH.getColumns(objArr, params.cols));
+
+    params.colHeaders = params.colHeaders ||
+      (params.columns && params.columns.map(function(a) {
+        return a.data;
+      }));
 
     if (params.readOnly) columns = columns.map(function(a) {
       a.readOnly = true;
@@ -62,9 +71,7 @@
     params.instance = new Handsontable(params.parent, {
       data: objArr,
       columns: params.columns,
-      colHeaders: params.columns.map(function(a) {
-        return a.data;
-      }),
+      colHeaders: params.colHeaders,
       manualColumnResize: true,
       columnSorting: true,
       startRows: params.startRows,
