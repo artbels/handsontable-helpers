@@ -49,7 +49,7 @@
     objArr = objArr || [];
 
     params.parent = params.parent || document.querySelector("#ht") || document.body;
-    if (typeof params.contextMenu === "undefined") params.contextMenu = true;
+    if (typeof params.contextMenu === "undefined") params.contextMenu = false;
     else params.contextMenu = params.contextMenu;
 
     params.columns = params.columns || HH.getColumns(objArr, params.cols);
