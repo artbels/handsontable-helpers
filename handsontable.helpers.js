@@ -63,9 +63,10 @@
         return a.data;
       }));
 
-    if (params.readOnly) columns = columns.map(function(a) {
-      a.readOnly = true;
-      return a;
+    if (params.readOnly && params.columns) 
+      params.columns = params.columns.map(function(a) {
+        a.readOnly = true;
+        return a;
     });
 
     params.instance = new Handsontable(params.parent, {
