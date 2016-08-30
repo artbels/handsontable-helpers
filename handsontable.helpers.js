@@ -47,9 +47,9 @@
       objArr = undefined;
     }
 
-    if (typeof params.instance != "undefined") params.instance.destroy();
-
     params = params || {};
+
+    if (typeof params.instance != "undefined") params.instance.destroy();
 
     params.parent = params.parent || document.querySelector("#ht") || document.body;
     if (typeof params.contextMenu === "undefined") params.contextMenu = false;
