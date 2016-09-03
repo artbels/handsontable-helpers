@@ -205,6 +205,7 @@
 
     for (var i = 0; i < changes.length; i++) {
       var change = changes[i];
+      if(!change) continue;
 
       var o = {
         oldValue: change[2],
