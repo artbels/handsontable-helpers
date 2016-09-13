@@ -81,6 +81,7 @@
       contextMenu: params.contextMenu,
       afterChange: params.afterChange,
       afterRemoveRow: params.afterRemoveRow,
+      afterSelection: params.afterSelection,
       colWidths: params.colWidths
     });
 
