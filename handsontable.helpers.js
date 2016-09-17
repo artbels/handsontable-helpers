@@ -358,6 +358,7 @@
 
     var
       colHeaders = [],
+      columns = [],
       hotData = hot.getData(),
       firstRow = hotData[0],
       data = hotData.splice(1),
@@ -367,6 +368,9 @@
       var name = firstRow[i];
       if (name) {
         colHeaders.push(name);
+        columns.push({
+          data: name
+        });
       } else deleteCols.push(i);
     }
 
@@ -376,6 +380,8 @@
         data[j].splice(delCol, 1);
       }
     }
+
+    data = HH.convArrArrToArrObj(data, columns);
 
     hot.updateSettings({
       'colWidths': undefined,
