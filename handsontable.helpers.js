@@ -354,22 +354,19 @@
   };
 
 
-  HH.setHeadersFirstRow = function(columns, hot) {
+  HH.setHeadersFirstRow = function(hot) {
+
     var
       colHeaders = [],
       hotData = hot.getData(),
       firstRow = hotData[0],
       data = hotData.splice(1),
-      newColumns = [],
-      deleteCols = [],
-      colWidths = [];
+      deleteCols = [];
 
     for (var i in firstRow) {
       var name = firstRow[i];
       if (name) {
         colHeaders.push(name);
-        newColumns.push(columns[i]);
-
       } else deleteCols.push(i);
     }
 
@@ -381,24 +378,9 @@
     }
 
     hot.updateSettings({
-      'colWidths': undefined
-    });
-
-    hot.updateSettings({
-      'columns': newColumns,
+      'colWidths': undefined,
       'colHeaders': colHeaders,
       'data': data,
-    });
-
-    columns = newColumns;
-
-    for (var cw = 0; cw < colHeaders.length; cw++) {
-      var width = hot.getColWidth(cw);
-      colWidths.push(width + 30);
-    }
-
-    hot.updateSettings({
-      'colWidths': colWidths
     });
   };
 
