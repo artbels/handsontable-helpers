@@ -381,10 +381,9 @@
       }
     }
 
-    data = HH.convArrArrToArrObj(data, 0, columns);
-
     hot.updateSettings({
       'colWidths': undefined,
+      columns: columns,
       'colHeaders': colHeaders,
       'data': data,
     });
