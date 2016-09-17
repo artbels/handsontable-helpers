@@ -381,7 +381,7 @@
       }
     }
 
-    data = HH.convArrArrToArrObj(data, columns);
+    data = HH.convArrArrToArrObj(data, 0, columns);
 
     hot.updateSettings({
       'colWidths': undefined,
