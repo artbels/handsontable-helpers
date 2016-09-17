@@ -63,25 +63,28 @@
         return a.data;
       }));
 
-    if (params.readOnly && params.columns) 
+    if (params.readOnly && params.columns)
       params.columns = params.columns.map(function(a) {
         a.readOnly = true;
         return a;
-    });
+      });
 
     params.instance = new Handsontable(params.parent, {
       data: objArr,
       columns: params.columns,
       colHeaders: params.colHeaders,
+      rowHeaders: params.rowHeaders,
       manualColumnResize: true,
       columnSorting: true,
       startRows: params.startRows,
       startCols: params.startCols,
+      minSpareCols: params.minSpareCols,
       minSpareRows: params.minSpareRows,
       contextMenu: params.contextMenu,
       afterChange: params.afterChange,
       afterRemoveRow: params.afterRemoveRow,
       afterSelection: params.afterSelection,
+      afterGetColHeader: params.afterGetColHeader,
       colWidths: params.colWidths
     });
 
@@ -206,7 +209,7 @@
 
     for (var i = 0; i < changes.length; i++) {
       var change = changes[i];
-      if(!change) continue;
+      if (!change) continue;
 
       var o = {
         oldValue: change[2],
@@ -326,7 +329,7 @@
 
   HH.convArrObjArrArr = function(arr) {
     var uniqColumns = {};
-    var finArr = []; 
+    var finArr = [];
 
     for (var i = 0; i < arr.length; i++) {
       for (var key in arr[i]) {
@@ -350,6 +353,55 @@
   };
 
 
+  HH.setHeadersFirstRow = function(columns) {
+    var
+      colHeaders = [],
+      hotData = hot.getData(),
+      firstRow = hotData[0],
+      data = hotData.splice(1),
+      newColumns = [],
+      deleteCols = [],
+      colWidths = [];
+
+    for (var i in firstRow) {
+      var name = firstRow[i];
+      if (name) {
+        colHeaders.push(name);
+        newColumns.push(columns[i]);
+
+      } else deleteCols.push(i);
+    }
+
+    for (var j = 0; j < data.length; j++) {
+      for (var c = 0; c < deleteCols.length; c++) {
+        var delCol = deleteCols[c];
+        data[j].splice(delCol, 1);
+      }
+    }
+
+    hot.updateSettings({
+      'colWidths': undefined
+    });
+
+    hot.updateSettings({
+      'columns': newColumns,
+      'colHeaders': colHeaders,
+      'data': data,
+    });
+
+    columns = newColumns;
+
+    for (var cw = 0; cw < colHeaders.length; cw++) {
+      var width = hot.getColWidth(cw);
+      colWidths.push(width + 30);
+    }
+
+    hot.updateSettings({
+      'colWidths': colWidths
+    });
+  };
+
+
   HH.buildParseSchema = function(columns, colHeaders) {
     var schemeObj = {};
 
@@ -361,5 +413,8 @@
     }
     return schemeObj;
   };
+
+
+
 
 })();
