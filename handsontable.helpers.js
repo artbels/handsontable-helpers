@@ -369,7 +369,7 @@
       if (name) {
         colHeaders.push(name);
         columns.push({
-          data: name
+          type: 'text'
         });
       } else deleteCols.push(i);
     }
@@ -383,11 +383,12 @@
 
     hot.updateSettings({
       'colWidths': undefined,
-      columns: columns,
+      'columns': columns,
       'colHeaders': colHeaders,
       'data': data,
     });
   };
+
 
 
   HH.buildParseSchema = function(columns, colHeaders) {
