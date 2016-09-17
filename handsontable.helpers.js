@@ -52,6 +52,7 @@
     if (typeof params.instance != "undefined") params.instance.destroy();
 
     params.parent = params.parent || document.querySelector("#ht") || document.body;
+
     if (typeof params.contextMenu === "undefined") params.contextMenu = false;
     else params.contextMenu = params.contextMenu;
 
@@ -373,7 +374,7 @@
     }
 
     for (var j = 0; j < data.length; j++) {
-      for (var c = 0; c < deleteCols.length; c++) {
+      for (var c = deleteCols.length - 1; c >= 0; c--) {
         var delCol = deleteCols[c];
         data[j].splice(delCol, 1);
       }
@@ -413,7 +414,6 @@
     }
     return schemeObj;
   };
-
 
 
 
