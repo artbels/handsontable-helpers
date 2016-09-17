@@ -354,7 +354,7 @@
   };
 
 
-  HH.setHeadersFirstRow = function(columns) {
+  HH.setHeadersFirstRow = function(columns, hot) {
     var
       colHeaders = [],
       hotData = hot.getData(),
