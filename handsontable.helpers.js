@@ -66,6 +66,8 @@
       afterRemoveRow: params.afterRemoveRow,
       afterSelection: params.afterSelection,
       afterGetColHeader: params.afterGetColHeader,
+      beforeChange: params.beforeChange,
+      beforeRemoveRow: params.beforeRemoveRow,
       colWidths: params.colWidths
     })
   }
