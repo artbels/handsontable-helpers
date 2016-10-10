@@ -68,7 +68,10 @@
       afterGetColHeader: params.afterGetColHeader,
       beforeChange: params.beforeChange,
       beforeRemoveRow: params.beforeRemoveRow,
-      colWidths: params.colWidths
+      colWidths: params.colWidths,
+      afterCreateRow: params.afterCreateRow,
+      maxRows: params.maxRows,
+      maxCols : params.maxCols
     })
   }
 
