@@ -178,6 +178,27 @@
     return data
   }
 
+  HH.groupChanges = function (changes, src) {
+    var rowGroups = {}
+
+    if (['external', 'loadData'].indexOf(src) != -1) return rowGroups
+    if (!changes || !changes.length) return rowGroups
+
+    for (var i = 0; i < changes.length; i++) {
+      var change = changes[i]
+      if (!change) continue
+
+      if (change[3] === change[2]) continue
+
+      if (!rowGroups[Number(change[0])]) {
+        rowGroups[Number(change[0])] = {}
+      }
+
+      rowGroups[Number(change[0])][change[1]] = change[3]
+    }
+    return rowGroups
+  }
+
   HH.afterChange = function (changes, src) {
     if (src == 'loadData') return
     if (!changes || !changes.length) return
