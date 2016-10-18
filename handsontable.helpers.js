@@ -58,7 +58,7 @@
     }
 
     for (var prop in params) {
-      if(['parent', 'readOnly', 'instance'].indexOf(prop) !== -1) continue
+      if(['parent', 'readOnly', 'instance', 'cols'].indexOf(prop) !== -1) continue
       hhParams[prop] = params[prop]
     }
 
