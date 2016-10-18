@@ -44,35 +44,25 @@
         return a.data
       }))
 
+    if(params.manualColumnResize !== undefined) 
+      params.manualColumnResize = Boolean(params.manualColumnResize)
+
     if (params.readOnly && params.columns)
       params.columns = params.columns.map(function (a) {
         a.readOnly = true
         return a
       })
 
-    params.instance = new Handsontable(params.parent, {
-      data: objArr,
-      columns: params.columns,
-      colHeaders: params.colHeaders,
-      rowHeaders: params.rowHeaders,
-      manualColumnResize: true,
-      columnSorting: true,
-      startRows: params.startRows,
-      startCols: params.startCols,
-      minSpareCols: params.minSpareCols,
-      minSpareRows: params.minSpareRows,
-      contextMenu: params.contextMenu,
-      afterChange: params.afterChange,
-      afterRemoveRow: params.afterRemoveRow,
-      afterSelection: params.afterSelection,
-      afterGetColHeader: params.afterGetColHeader,
-      beforeChange: params.beforeChange,
-      beforeRemoveRow: params.beforeRemoveRow,
-      colWidths: params.colWidths,
-      afterCreateRow: params.afterCreateRow,
-      maxRows: params.maxRows,
-      maxCols : params.maxCols
-    })
+    var hhParams = {
+      data: objArr
+    }
+
+    for (var prop in params) {
+      if(['parent', 'readOnly', 'instance'].indexOf(prop) !== -1) continue
+      hhParams[prop] = params[prop]
+    }
+
+    params.instance = new Handsontable(params.parent, hhParams)
   }
 
   HH.setColType = function (prop, jsType) {
