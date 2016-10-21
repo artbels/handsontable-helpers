@@ -44,7 +44,7 @@
         return a.data
       }))
 
-    if(params.manualColumnResize !== undefined) 
+    if (params.manualColumnResize !== undefined)
       params.manualColumnResize = Boolean(params.manualColumnResize)
 
     if (params.readOnly && params.columns)
@@ -58,7 +58,7 @@
     }
 
     for (var prop in params) {
-      if(['parent', 'readOnly', 'instance', 'cols'].indexOf(prop) !== -1) continue
+      if (['parent', 'readOnly', 'instance', 'cols'].indexOf(prop) !== -1) continue
       hhParams[prop] = params[prop]
     }
 
@@ -168,7 +168,7 @@
     return data
   }
 
-  HH.groupChanges = function (changes, src) {
+  HH.groupChanges = function (changes, src, columns) {
     var rowGroups = {}
 
     if (['external', 'loadData'].indexOf(src) != -1) return rowGroups
@@ -184,7 +184,15 @@
         rowGroups[Number(change[0])] = {}
       }
 
-      rowGroups[Number(change[0])][change[1]] = change[3]
+      if (columns) {
+        var fieldType
+        for (var t = 0; t < columns.length; t++) {
+          var col = columns[t]
+          if (col.data == field) fieldType = col.jsType
+        }
+
+        rowGroups[Number(change[0])][change[1]] = HH.setDataType(change[3], fieldType)
+      } else rowGroups[Number(change[0])][change[1]] = change[3]
     }
     return rowGroups
   }
