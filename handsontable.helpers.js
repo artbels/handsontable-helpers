@@ -113,21 +113,6 @@
     return columns
   }
 
-  HH.updateIdArr = function (data, colHeaders) {
-    var idArr = []
-    for (var i = 0; i < data.length; i++) {
-      var item = data[i]
-      for (var j = 0; j < colHeaders.length; j++) {
-        var col = colHeaders[j]
-        if (col == '_id') {
-          idArr.push(item[j])
-          break
-        }
-      }
-    }
-    return idArr
-  }
-
   HH.setDataType = function (data, type) {
     switch (type) {
       case 'number':
@@ -197,47 +182,12 @@
     return rowGroups
   }
 
-  HH.afterChange = function (changes, src) {
-    if (src == 'loadData') return
-    if (!changes || !changes.length) return
+  HH.convArrArrToArrObj = function (hotData, columns, minSpareRows) {
 
-    var changesArr = []
+    if(!hotData || !columns) throw Error('!hotData || !columns')
 
-    for (var i = 0; i < changes.length; i++) {
-      var change = changes[i]
-      if (!change) continue
+    minSpareRows = minSpareRows || 0
 
-      var o = {
-        oldValue: change[2],
-        newValue: change[3]
-      }
-      var changed = (o.oldValue != o.newValue)
-
-      if (!changed) continue
-
-      o.rowNum = Number(change[0])
-      o.field = change[1]
-      changesArr.push(o)
-    }
-
-    return changesArr
-  }
-
-  HH.afterRemoveRow = function (rowNum, numRows, idArr, func) {
-    return new Promise(function (res, err) {
-      (function next () {
-        func(rowNum, function () {
-          rowNum++
-          numRows--
-
-          if (numRows > 0) next()
-          else res()
-        })
-      })()
-    })
-  }
-
-  HH.convArrArrToArrObj = function (hotData, minSpareRows, columns) {
     var arr = []
 
     var colHeaders = columns.map(function (a) {
