@@ -173,7 +173,7 @@
         var fieldType
         for (var t = 0; t < columns.length; t++) {
           var col = columns[t]
-          if (col.data == field) fieldType = col.jsType
+          if (col.data == change[1]) fieldType = col.jsType
         }
 
         rowGroups[Number(change[0])][change[1]] = HH.setDataType(change[3], fieldType)
