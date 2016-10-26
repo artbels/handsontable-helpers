@@ -207,16 +207,16 @@
         allRowsEmpty = false
 
         switch (type) {
-          case 'Number':
+          case 'number':
             if (isNaN(cell)) cell = undefined
             else cell = Number(cell)
             break
 
-          case 'Boolean':
+          case 'boolean':
             cell = Boolean(cell)
             break
 
-          case 'Array':
+          case 'array':
             try {
               cell = JSON.parse(cell)
             } catch (e) {
@@ -224,7 +224,7 @@
             }
             break
 
-          case 'Object':
+          case 'object':
             try {
               cell = JSON.parse(cell)
             } catch (e) {
@@ -232,7 +232,7 @@
             }
             break
 
-          case 'Date':
+          case 'date':
             if (cell) {
               try {
                 cell = new Date(cell)
