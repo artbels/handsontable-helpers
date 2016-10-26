@@ -206,44 +206,7 @@
         if ((typeof cell === 'undefined') || (cell === null)) continue
         allRowsEmpty = false
 
-        switch (type) {
-          case 'number':
-            if (isNaN(cell)) cell = undefined
-            else cell = Number(cell)
-            break
-
-          case 'boolean':
-            cell = Boolean(cell)
-            break
-
-          case 'array':
-            try {
-              cell = JSON.parse(cell)
-            } catch (e) {
-              cell = cell.split(/,|;|\t/)
-            }
-            break
-
-          case 'object':
-            try {
-              cell = JSON.parse(cell)
-            } catch (e) {
-              console.log(e)
-            }
-            break
-
-          case 'date':
-            if (cell) {
-              try {
-                cell = new Date(cell)
-              } catch (e) {
-                console.log(e)
-              }
-            }
-            break
-        }
-
-        o[prop] = cell
+        o[prop] = HH.setDataType(cell, type)
       }
       if (!allRowsEmpty) arr.push(o)
     }
