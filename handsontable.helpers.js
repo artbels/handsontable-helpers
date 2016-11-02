@@ -72,6 +72,7 @@
     }
 
     col.type = HH.typesMap[col.jsType]
+    if(!col.type) col.type = 'object'
     if (['id', '_id', 'objectId'].indexOf(prop) != -1) col.readOnly = true
     if (col.jsType == 'date') col.dateFormat = 'DD-MMM-YYYY'
     else if (col.jsType == 'number') col.format = '0.[0000000000]'
@@ -88,7 +89,7 @@
       for (var key in row) {
         var val = row[key]
         var jsType = typeof val
-        if (jsType == 'string') {
+        if (jsType === 'string') {
           if (HH.reJsStrData.test(val)) jsType = 'date'
         }
         if (!props[key]) props[key] = jsType
