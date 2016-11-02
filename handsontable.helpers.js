@@ -104,7 +104,11 @@
         }
       }
     } else {
-      for (var prop in props) {
+
+      var fields = Object.keys(props).sort(function (a, b) { return a - b})
+
+      for (var p = 0; p < fields.length; p++) {
+        var prop = fields[p]
         col = HH.setColType(prop, props[prop])
         columns.push(col)
       }
