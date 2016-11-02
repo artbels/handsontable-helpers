@@ -104,8 +104,11 @@
         }
       }
     } else {
-
-      var fields = Object.keys(props).sort(function (a, b) { return a - b})
+      var fields = Object.keys(props).sort(function (a, b) {
+        if (a === '_id') return -1
+        if (a.toUpperCase() > b.toUpperCase()) return 1
+        return -1
+      })
 
       for (var p = 0; p < fields.length; p++) {
         var prop = fields[p]
@@ -187,8 +190,7 @@
   }
 
   HH.convArrArrToArrObj = function (hotData, columns, minSpareRows, colHeaders) {
-
-    if(!hotData || !columns) throw Error('!hotData || !columns')
+    if (!hotData || !columns) throw Error('!hotData || !columns')
 
     minSpareRows = minSpareRows || 0
 
