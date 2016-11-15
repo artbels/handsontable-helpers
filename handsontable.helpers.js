@@ -104,10 +104,7 @@
         }
       }
     } else {
-      var fields = Object.keys(props).sort(function (a, b) {
-        if (a === '_id') return -1
-        else return 1
-      })
+      var fields = Object.keys(props)
 
       for (var p = 0; p < fields.length; p++) {
         var prop = fields[p]
