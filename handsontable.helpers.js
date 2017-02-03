@@ -179,8 +179,11 @@
           if (col.data == change[1]) fieldType = col.jsType
         }
 
-        rowGroups[Number(change[0])][change[1]] = HH.setDataType(change[3], fieldType)
-      } else rowGroups[Number(change[0])][change[1]] = change[3]
+        rowGroups[Number(change[0])][change[1]] = {
+          new: HH.setDataType(change[3], fieldType),
+          old: change[2]
+        }
+      } else rowGroups[Number(change[0])][change[1]] = {new: change[3], old: change[2]}
     }
     return rowGroups
   }
