@@ -119,7 +119,7 @@
   HH.setDataType = function (data, type) {
     switch (type) {
       case 'number':
-        if (isNaN(data)) data = undefined
+        if ((data === '') || isNaN(data)) data = undefined
         else data = Number(data)
         break
 
