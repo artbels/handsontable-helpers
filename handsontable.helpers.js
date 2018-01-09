@@ -1,7 +1,7 @@
 /**
  * Handsontable helper functions
- * artbels @ 2016 
- * 
+ * artbels @ 2016
+ *
  */
 
 ;(function () {
@@ -39,7 +39,7 @@
     params.columns = params.columns ||
       (objArr && HH.getColumns(objArr, params.cols))
 
-    params.colHeaders = (params.colHeaders !== undefined) ? params.colHeaders : 
+    params.colHeaders = (params.colHeaders !== undefined) ? params.colHeaders :
       (params.columns && params.columns.map(function (a) {
         return a.data
       }))
@@ -304,4 +304,4 @@
     }
     return schemeObj
   }
-})()
+})();
