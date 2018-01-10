@@ -1,7 +1,7 @@
 /**
  * Handsontable helper functions
- * artbels @ 2016 
- * 
+ * artbels @ 2016
+ *
  */
 
 ;(function () {
@@ -18,18 +18,20 @@
   }
 
   HH.draw = function (objArr, params) {
-    if (typeof params == 'string') params = {
+    if (typeof params === 'string') {
+      params = {
         parent: document.querySelector(params)
+      }
     }
 
-    if ((typeof params == 'undefined') && (objArr.constructor == Object)) {
+    if ((typeof params === 'undefined') && (objArr.constructor == Object)) {
       params = objArr
       objArr = undefined
     }
 
     params = params || {}
 
-    if (typeof params.instance != 'undefined') params.instance.destroy()
+    if (typeof params.instance !== 'undefined') params.instance.destroy()
 
     params.parent = params.parent || document.querySelector('#ht') || document.body
 
@@ -39,19 +41,21 @@
     params.columns = params.columns ||
       (objArr && HH.getColumns(objArr, params.cols))
 
-    params.colHeaders = (params.colHeaders !== undefined) ? params.colHeaders : 
+    params.colHeaders = (params.colHeaders !== undefined) ? params.colHeaders :
       (params.columns && params.columns.map(function (a) {
         return a.data
       }))
 
-    if (params.manualColumnResize !== undefined)
+    if (params.manualColumnResize !== undefined) {
       params.manualColumnResize = Boolean(params.manualColumnResize)
+    }
 
-    if (params.readOnly && params.columns)
+    if (params.readOnly && params.columns) {
       params.columns = params.columns.map(function (a) {
         a.readOnly = true
         return a
       })
+    }
 
     var hhParams = {
       data: objArr
@@ -219,7 +223,7 @@
   }
 
   HH.stringifyArrObj = function (arr) {
-    if ((!arr) && (typeof (arr[0]) != 'object')) return
+    if ((!arr) && (typeof (arr[0]) !== 'object')) return
 
     for (var i = 0; i < arr.length; i++) {
       var row = arr[i]
@@ -304,4 +308,4 @@
     }
     return schemeObj
   }
-})()
+})();
