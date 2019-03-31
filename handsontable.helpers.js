@@ -30,6 +30,7 @@
     }
 
     params = params || {}
+    params.licenseKey = 'non-commercial-and-evaluation'
 
     if (typeof params.instance !== 'undefined') params.instance.destroy()
 
